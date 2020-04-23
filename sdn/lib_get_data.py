@@ -3,7 +3,10 @@ Module that offers remote data fetching
 """
 import urllib.request
 import json
+import logging
 from http import HTTPStatus
+
+__LOGGER = logging.getLogger(__name__)
 
 
 def get_data(url, max_retries=5, delay_between_retries=1):
@@ -20,10 +23,12 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     try:
         with urllib.request.urlopen(url) as response:
             if response.status != HTTPStatus.OK:
+                __LOGGER.error("Bad response %s, %s", response.status, response.reason)
                 return None
 
             data = response.read()
-    except (ValueError, urllib.error.URLError):
+    except (ValueError, urllib.error.URLError) as exc:
+        __LOGGER.error("Get Data failed \n%s", exc)
         return None
 
     return json.loads(data)
