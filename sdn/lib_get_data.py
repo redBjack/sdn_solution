@@ -18,12 +18,12 @@ def get_data(url, max_retries=5, delay_between_retries=1):
         data (dict)
     """
     try:
-        response = urllib.request.urlopen(url)
+        with urllib.request.urlopen(url) as response:
+            if response.status != HTTPStatus.OK:
+                return None
+
+            data = response.read()
     except (ValueError, urllib.error.URLError):
         return None
 
-    if response.status != HTTPStatus.OK:
-        return None
-
-    data = response.read()
     return json.loads(data)

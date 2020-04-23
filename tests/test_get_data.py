@@ -29,7 +29,9 @@ def test_get_data_returns_none_fora_bad_http_response_status():
     # GIVEN that the response is not 200
     response_mock = MagicMock(HTTPResponse)
     response_mock.status = 400
-    with patch("urllib.request.urlopen", return_value=response_mock):
+    urlopen_mock = MagicMock()
+    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
+    with patch("urllib.request.urlopen", return_value=urlopen_mock):
         # WHEN calling get_data
         response = get_data(__TEST_URL)
 
