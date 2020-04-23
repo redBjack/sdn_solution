@@ -1,4 +1,3 @@
-from http.client import HTTPResponse
 import http.client
 from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
@@ -28,7 +27,7 @@ def test_get_data_returns_a_dict():
 
 def test_get_data_returns_none_fora_bad_http_response_status():
     # GIVEN that the response is not 200
-    response_mock = MagicMock(HTTPResponse)
+    response_mock = MagicMock(http.client.HTTPResponse)
     response_mock.status = 400
     response_mock.reason = "Bad something something"
     urlopen_mock = MagicMock()
@@ -43,7 +42,7 @@ def test_get_data_returns_none_fora_bad_http_response_status():
 
 def test_get_data_returns_none_if_read_gives_exception():
     # GIVEN that the response is unreadable and it raises HTTPException
-    response_mock = MagicMock(HTTPResponse)
+    response_mock = MagicMock(http.client.HTTPResponse)
     response_mock.status = 200
     response_mock.read.side_effect = http.client.HTTPException("Cannot read")
     urlopen_mock = MagicMock()
