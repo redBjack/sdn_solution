@@ -88,3 +88,13 @@ def test_get_data_retries_on_error():
 
     # THEN urllib.request.urlopen was called 6 times (first attempt + 5 retries)
     assert urlopen_mock.__enter__.call_count == 6
+
+
+def test_get_data_sleeps_between_retries(sleep_mock):
+    # GIVEN that upon parsing the response an exception is raised
+    with patch("json.loads", side_effect=json.JSONDecodeError("Bad json", doc="my doc", pos=11)):
+        # WHEN calling get_data
+        get_data(__TEST_URL)
+
+    # THEN sleep is only called 5 times (not 6)
+    assert sleep_mock.call_count == 5

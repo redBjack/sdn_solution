@@ -22,25 +22,25 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     Returns:
         data (dict)
     """
-    for _ in range(max_retries + 1):
+    for retry in range(max_retries + 1):
+        if retry > 0:
+            __LOGGER.info("Previous run failed, retrying - attempt %s", retry)
+            time.sleep(delay_between_retries)
         try:
             with urllib.request.urlopen(url) as response:
                 if response.status != HTTPStatus.OK:
                     __LOGGER.error("Bad response %s, %s", response.status, response.reason)
-                    time.sleep(delay_between_retries)
                     continue
 
                 data = response.read()
         except (ValueError, urllib.error.URLError, http.client.HTTPException) as exc:
             __LOGGER.error("Get Data failed \n%s", exc)
-            time.sleep(delay_between_retries)
             continue
 
         try:
             return json.loads(data)
         except json.decoder.JSONDecodeError as exc:
             __LOGGER.error("Response data could not be decoded as JSON\n%s", exc)
-            time.sleep(delay_between_retries)
             continue
 
     return None
