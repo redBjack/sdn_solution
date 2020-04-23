@@ -1,4 +1,5 @@
 from http.client import HTTPResponse
+import http.client
 from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
 
@@ -37,4 +38,19 @@ def test_get_data_returns_none_fora_bad_http_response_status():
         response = get_data(__TEST_URL)
 
     # THEN it returns None
+    assert response is None
+
+
+def test_get_data_returns_none_if_read_gives_exception():
+    # GIVEN that the response is unreadable and it raises HTTPException
+    response_mock = MagicMock(HTTPResponse)
+    response_mock.status = 200
+    response_mock.read.side_effect = http.client.HTTPException("Cannot read")
+    urlopen_mock = MagicMock()
+    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
+    with patch("urllib.request.urlopen", return_value=urlopen_mock):
+        # WHEN calling get_data
+        response = get_data(__TEST_URL)
+
+    # THEN the response is None
     assert response is None

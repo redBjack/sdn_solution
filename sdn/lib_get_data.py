@@ -5,6 +5,7 @@ import urllib.request
 import json
 import logging
 from http import HTTPStatus
+import http.client
 
 __LOGGER = logging.getLogger(__name__)
 
@@ -27,7 +28,7 @@ def get_data(url, max_retries=5, delay_between_retries=1):
                 return None
 
             data = response.read()
-    except (ValueError, urllib.error.URLError) as exc:
+    except (ValueError, urllib.error.URLError, http.client.HTTPException) as exc:
         __LOGGER.error("Get Data failed \n%s", exc)
         return None
 
