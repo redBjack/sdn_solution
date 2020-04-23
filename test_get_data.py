@@ -1,4 +1,4 @@
-from main import get_data
+from sdn.lib_get_data import get_data
 
 
 def test_get_data_returns_none():
