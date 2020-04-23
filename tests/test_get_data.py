@@ -1,4 +1,5 @@
 import http.client
+import json
 from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
 
@@ -48,6 +49,16 @@ def test_get_data_returns_none_if_read_gives_exception():
     urlopen_mock = MagicMock()
     urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
     with patch("urllib.request.urlopen", return_value=urlopen_mock):
+        # WHEN calling get_data
+        response = get_data(__TEST_URL)
+
+    # THEN the response is None
+    assert response is None
+
+
+def test_get_data_returns_none_if_json_gives_exception():
+    # GIVEN that upon parsing the response an exception is raised
+    with patch("json.loads", side_effect=json.JSONDecodeError("Bad json", doc="my doc", pos=11)):
         # WHEN calling get_data
         response = get_data(__TEST_URL)
 

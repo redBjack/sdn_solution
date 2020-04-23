@@ -32,4 +32,8 @@ def get_data(url, max_retries=5, delay_between_retries=1):
         __LOGGER.error("Get Data failed \n%s", exc)
         return None
 
-    return json.loads(data)
+    try:
+        return json.loads(data)
+    except json.decoder.JSONDecodeError as exc:
+        __LOGGER.error("Response data could not be decoded as JSON\n%s", exc)
+        return None
