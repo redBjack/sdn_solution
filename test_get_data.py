@@ -10,7 +10,6 @@ def test_get_data_returns_none():
     assert get_data("/fake/url") is None
 
 
-@pytest.mark.xfail(reason="Not implemented yet")
 def test_get_data_returns_a_dict():
     # WHEN calling get_data on the test url
     response = get_data(__TEST_URL)

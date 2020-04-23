@@ -1,11 +1,13 @@
 """
 Module that offers remote data fetching
 """
+import urllib.request
+import json
+
 
 def get_data(url, max_retries=5, delay_between_retries=1):
     """
-    Fetch the data from http://www.mocky.io/v2/5e539b332e00007c002dacbe
-    and return it as a JSON object.
+    Fetch the data from given URL and return it as a JSON object.
 ​
     Args:
         url (str): The url to be fetched.
@@ -14,4 +16,10 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     Returns:
         data (dict)
     """
-    pass  # the rest of your logic here
+    try:
+        response = urllib.request.urlopen(url)
+    except ValueError:
+        return None
+
+    data = response.read()
+    return json.loads(data)
