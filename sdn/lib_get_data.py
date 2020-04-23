@@ -6,6 +6,7 @@ import json
 import logging
 from http import HTTPStatus
 import http.client
+import time
 
 __LOGGER = logging.getLogger(__name__)
 
@@ -21,19 +22,25 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     Returns:
         data (dict)
     """
-    try:
-        with urllib.request.urlopen(url) as response:
-            if response.status != HTTPStatus.OK:
-                __LOGGER.error("Bad response %s, %s", response.status, response.reason)
-                return None
+    for _ in range(max_retries + 1):
+        try:
+            with urllib.request.urlopen(url) as response:
+                if response.status != HTTPStatus.OK:
+                    __LOGGER.error("Bad response %s, %s", response.status, response.reason)
+                    time.sleep(delay_between_retries)
+                    continue
 
-            data = response.read()
-    except (ValueError, urllib.error.URLError, http.client.HTTPException) as exc:
-        __LOGGER.error("Get Data failed \n%s", exc)
-        return None
+                data = response.read()
+        except (ValueError, urllib.error.URLError, http.client.HTTPException) as exc:
+            __LOGGER.error("Get Data failed \n%s", exc)
+            time.sleep(delay_between_retries)
+            continue
 
-    try:
-        return json.loads(data)
-    except json.decoder.JSONDecodeError as exc:
-        __LOGGER.error("Response data could not be decoded as JSON\n%s", exc)
-        return None
+        try:
+            return json.loads(data)
+        except json.decoder.JSONDecodeError as exc:
+            __LOGGER.error("Response data could not be decoded as JSON\n%s", exc)
+            time.sleep(delay_between_retries)
+            continue
+
+    return None

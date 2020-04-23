@@ -1,9 +1,18 @@
 import http.client
 import json
+import pytest
 from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
 
 __TEST_URL = "http://www.mocky.io/v2/5e539b332e00007c002dacbe"
+
+
+@pytest.fixture(autouse=True)
+def sleep_mock(mocker):
+    """
+    Skip sleeps in testing to speed it up
+    """
+    yield mocker.patch("time.sleep")
 
 
 def test_get_data_returns_none_for_badly_formed_url():
@@ -64,3 +73,18 @@ def test_get_data_returns_none_if_json_gives_exception():
 
     # THEN the response is None
     assert response is None
+
+
+def test_get_data_retries_on_error():
+    # GIVEN that the response is not 200
+    response_mock = MagicMock(http.client.HTTPResponse)
+    response_mock.status = 400
+    response_mock.reason = "Oh this is baaaad!"
+    urlopen_mock = MagicMock()
+    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
+    with patch("urllib.request.urlopen", return_value=urlopen_mock):
+        # WHEN calling get_data
+        get_data(__TEST_URL)
+
+    # THEN urllib.request.urlopen was called 6 times (first attempt + 5 retries)
+    assert urlopen_mock.__enter__.call_count == 6
