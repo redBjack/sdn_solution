@@ -29,8 +29,7 @@ def get_data(url, max_retries=5, delay_between_retries=1):
         try:
             with urllib.request.urlopen(url) as response:
                 if response.status != HTTPStatus.OK:
-                    __LOGGER.error("Bad response %s, %s", response.status, response.reason)
-                    continue
+                    raise ValueError(f"Bad response {response.status}, {response.reason}")
 
                 data = response.read()
 
