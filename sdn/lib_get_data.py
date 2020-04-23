@@ -3,6 +3,7 @@ Module that offers remote data fetching
 """
 import urllib.request
 import json
+from http import HTTPStatus
 
 
 def get_data(url, max_retries=5, delay_between_retries=1):
@@ -19,6 +20,9 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     try:
         response = urllib.request.urlopen(url)
     except (ValueError, urllib.error.URLError):
+        return None
+
+    if response.status != HTTPStatus.OK:
         return None
 
     data = response.read()

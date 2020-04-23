@@ -1,4 +1,5 @@
-import pytest
+from http.client import HTTPResponse
+from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
 
 __TEST_URL = "http://www.mocky.io/v2/5e539b332e00007c002dacbe"
@@ -22,3 +23,15 @@ def test_get_data_returns_a_dict():
 
     # THEN it returns a valid dict object
     assert isinstance(response, dict)
+
+
+def test_get_data_returns_none_fora_bad_http_response_status():
+    # GIVEN that the response is not 200
+    response_mock = MagicMock(HTTPResponse)
+    response_mock.status = 400
+    with patch("urllib.request.urlopen", return_value=response_mock):
+        # WHEN calling get_data
+        response = get_data(__TEST_URL)
+
+    # THEN it returns None
+    assert response is None
