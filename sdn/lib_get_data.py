@@ -18,7 +18,7 @@ def get_data(url, max_retries=5, delay_between_retries=1):
     """
     try:
         response = urllib.request.urlopen(url)
-    except ValueError:
+    except (ValueError, urllib.error.URLError):
         return None
 
     data = response.read()
