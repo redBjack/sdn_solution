@@ -27,13 +27,7 @@ def get_data(url, max_retries=5, delay_between_retries=1):
             __LOGGER.info("Previous run failed, retrying - attempt %s", retry)
             time.sleep(delay_between_retries)
         try:
-            with urllib.request.urlopen(url) as response:
-                if response.status != HTTPStatus.OK:
-                    raise ValueError(f"Bad response {response.status}, {response.reason}")
-
-                data = response.read()
-
-            return json.loads(data)
+            return __get_data_attempt(url)
         except (
                 ValueError,                    # raised by urlopen
                 urllib.error.URLError,         # raised by urlopen
@@ -44,3 +38,13 @@ def get_data(url, max_retries=5, delay_between_retries=1):
             continue
 
     return None
+
+
+def __get_data_attempt(url):
+    with urllib.request.urlopen(url) as response:
+        if response.status != HTTPStatus.OK:
+            raise ValueError(f"Bad response {response.status}, {response.reason}")
+
+        data = response.read()
+
+    return json.loads(data)
