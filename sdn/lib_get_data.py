@@ -33,14 +33,15 @@ def get_data(url, max_retries=5, delay_between_retries=1):
                     continue
 
                 data = response.read()
-        except (ValueError, urllib.error.URLError, http.client.HTTPException) as exc:
-            __LOGGER.error("Get Data failed \n%s", exc)
-            continue
 
-        try:
             return json.loads(data)
-        except json.decoder.JSONDecodeError as exc:
-            __LOGGER.error("Response data could not be decoded as JSON\n%s", exc)
+        except (
+                ValueError,                    # raised by urlopen
+                urllib.error.URLError,         # raised by urlopen
+                http.client.HTTPException,     # raised by read
+                json.decoder.JSONDecodeError   # raised by loads
+        ) as exc:
+            __LOGGER.error("Get Data failed \n%s", exc)
             continue
 
     return None
