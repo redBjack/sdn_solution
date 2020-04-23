@@ -15,6 +15,19 @@ def sleep_mock(mocker):
     yield mocker.patch("time.sleep")
 
 
+@pytest.fixture
+def bad_response_mock():
+    """
+    Fixture that gives a mock for a bad response
+    """
+    response_mock = MagicMock(http.client.HTTPResponse)
+    response_mock.status = 400
+    response_mock.reason = "Oh this is baaaad!"
+    urlopen_mock = MagicMock()
+    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
+    yield urlopen_mock
+
+
 def test_get_data_returns_none_for_badly_formed_url():
     # WHEN calling get_data with a badly formed url
     # THEN it returns None
@@ -35,14 +48,9 @@ def test_get_data_returns_a_dict():
     assert isinstance(response, dict)
 
 
-def test_get_data_returns_none_fora_bad_http_response_status():
+def test_get_data_returns_none_fora_bad_http_response_status(bad_response_mock):
     # GIVEN that the response is not 200
-    response_mock = MagicMock(http.client.HTTPResponse)
-    response_mock.status = 400
-    response_mock.reason = "Bad something something"
-    urlopen_mock = MagicMock()
-    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
-    with patch("urllib.request.urlopen", return_value=urlopen_mock):
+    with patch("urllib.request.urlopen", return_value=bad_response_mock):
         # WHEN calling get_data
         response = get_data(__TEST_URL)
 
@@ -75,19 +83,14 @@ def test_get_data_returns_none_if_json_gives_exception():
     assert response is None
 
 
-def test_get_data_retries_on_error():
+def test_get_data_retries_on_error(bad_response_mock):
     # GIVEN that the response is not 200
-    response_mock = MagicMock(http.client.HTTPResponse)
-    response_mock.status = 400
-    response_mock.reason = "Oh this is baaaad!"
-    urlopen_mock = MagicMock()
-    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
-    with patch("urllib.request.urlopen", return_value=urlopen_mock):
+    with patch("urllib.request.urlopen", return_value=bad_response_mock):
         # WHEN calling get_data
         get_data(__TEST_URL)
 
     # THEN urllib.request.urlopen was called 6 times (first attempt + 5 retries)
-    assert urlopen_mock.__enter__.call_count == 6
+    assert bad_response_mock.__enter__.call_count == 6
 
 
 def test_get_data_sleeps_between_retries(sleep_mock):
