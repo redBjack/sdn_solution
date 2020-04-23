@@ -2,7 +2,7 @@ import http.client
 import json
 import pytest
 import urllib.request
-from mock import patch, MagicMock
+from mock import patch, MagicMock, call
 from sdn.lib_get_data import get_data
 
 __TEST_URL = "http://www.mocky.io/v2/5e539b332e00007c002dacbe"
@@ -130,3 +130,15 @@ def test_get_data_gives_expected_result_for_test_json():
     with open("tests/response.json") as response_file:
         expected_response = json.load(response_file)
     assert expected_response == response  # comparing dicts
+
+
+def test_get_data_sleeps_desired_amount_between_retries(sleep_mock):
+    # GIVEN that upon parsing the response an exception is raised
+    with patch("json.loads", side_effect=json.JSONDecodeError("Bad json", doc="my doc", pos=11)):
+        # WHEN calling get_data with 4 retries and 2 seconds delay
+        get_data(__TEST_URL, max_retries=4, delay_between_retries=2)
+
+    # THEN sleep is only called 4 times
+    assert sleep_mock.call_count == 4
+    # each time with 2 seconds as argument
+    sleep_mock.assert_has_calls([call(2)] * 4)
