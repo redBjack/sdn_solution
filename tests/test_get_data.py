@@ -1,6 +1,7 @@
 import http.client
 import json
 import pytest
+import urllib.request
 from mock import patch, MagicMock
 from sdn.lib_get_data import get_data
 
@@ -20,11 +21,12 @@ def bad_response_mock():
     """
     Fixture that gives a mock for a bad response
     """
-    response_mock = MagicMock(http.client.HTTPResponse)
-    response_mock.status = 400
-    response_mock.reason = "Oh this is baaaad!"
     urlopen_mock = MagicMock()
-    urlopen_mock.__enter__.return_value = response_mock  # mocking the context manager
+    # storing the underlying mock for test easy access
+    urlopen_mock.response_mock = MagicMock(http.client.HTTPResponse)
+    urlopen_mock.response_mock.status = 400
+    urlopen_mock.response_mock.reason = "Oh this is baaaad!"
+    urlopen_mock.__enter__.return_value = urlopen_mock.response_mock  # mocking the context manager
     yield urlopen_mock
 
 
@@ -101,3 +103,20 @@ def test_get_data_sleeps_between_retries(sleep_mock):
 
     # THEN sleep is only called 5 times (not 6)
     assert sleep_mock.call_count == 5
+
+
+def test_get_data_stops_retrying_if_succeeds_and_returns_dict(bad_response_mock):
+    # GIVEN that http response is bad a couple of times and a good one the third time
+    bad_response_mock.__enter__.side_effect = [
+        bad_response_mock.response_mock,    # the response 400
+        bad_response_mock.response_mock,    # the response 400 at first retry
+        urllib.request.urlopen(__TEST_URL)  # second retry - does the actual call
+    ]
+    with patch("urllib.request.urlopen", return_value=bad_response_mock):
+        # WHEN calling get_data
+        response = get_data(__TEST_URL)
+
+    # THEN response is a dict
+    assert isinstance(response, dict)
+    # and urllib.request.urlopen was called 3 times
+    assert bad_response_mock.__enter__.call_count == 3
