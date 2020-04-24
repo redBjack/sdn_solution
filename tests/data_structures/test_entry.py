@@ -52,7 +52,17 @@ def test_entry_inits_from_json_example(response_json_example):
 
 __VALID_IP_ADDRESS = {
     "1.1.1.1": True,
-    "10.1.256.1": False
+    "10.1.256.1": False,
+    "1.1.1": False,
+    "255.255.255.255": True,
+    "0.0.0.0": True,
+    "1.2.3.3.5": False,
+    "2001:0db8:85a3:0000:0000:8a2e:0370:7334": False,
+    "30-65-EC-6F-C4-58": False,
+    "1.1.1,1": False,
+    "1A.1.1.1": False,
+    "FF.FF.FF.FF": False,
+    "-1.1.1.1": False
 }
 
 
