@@ -7,5 +7,4 @@ class Entry:
         self.available -> bool
         self.last_used -> datetime
         """
-
-        pass
+        self.address = address
