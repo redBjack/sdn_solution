@@ -7,5 +7,4 @@ class Cluster:
         self.security_level -> int
         self.networks -> list(NetworkCollection)
         """
-
-        pass
+        self.name = name
