@@ -1,4 +1,4 @@
-from ipaddress import ip_network
+from ipaddress import ip_network, IPv4Interface
 from data_structures.entry import Entry
 
 
@@ -37,4 +37,13 @@ class NetworkCollection:
         :return bool - True if it is an address of the network, False if not
         @note working under the assumption that network address and broadcast address are not valid
         """
-        return address in self.ipv4_network.hosts()
+        # First get the interface ip of the given address using the network mask of the known network
+        ip_interface = IPv4Interface(f"{str(address)}/{self.ipv4_network.netmask}")
+
+        return (
+            # The interface must be in the same network
+            ip_interface.network == self.ipv4_network
+            # but network and broadcast addresses are not accepted
+            and address not in
+            [self.ipv4_network.network_address, self.ipv4_network.broadcast_address]
+        )
