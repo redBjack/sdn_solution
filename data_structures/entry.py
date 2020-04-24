@@ -14,13 +14,15 @@ class Entry:
         self.address = address
         self.available = available
         self.last_used = datetime.strptime(last_used, "%d/%m/%y %H:%M:%S")
+        self.ipv4_address = None
 
     def has_valid_address(self):
         """
         Validates address is IPv4 Address
+        As a side effect ipv4_address is stored
         """
         try:
-            IPv4Address(self.address)
+            self.ipv4_address = IPv4Address(self.address)
             return True
         except AddressValueError:
             return False

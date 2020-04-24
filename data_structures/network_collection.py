@@ -22,7 +22,7 @@ class NetworkCollection:
         """
         self.entries = [
             entry for entry in self.entries
-            if entry.has_valid_address() and self.is_address_in_network(ip_address(entry.address))
+            if entry.has_valid_address() and self.is_address_in_network(entry.ipv4_address)
         ]
 
     def sort_records(self):
