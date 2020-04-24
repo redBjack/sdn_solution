@@ -3,18 +3,22 @@ Conftest for pytest tests
 """
 import pytest
 import json
+import os
 from data_structures.datacenter import Datacenter
+
+
+__DIR_PATH = os.path.dirname(os.path.abspath(__file__))
 
 
 @pytest.fixture
 def response_json_example():
-    with open("tests/response.json") as response_file:
+    with open(os.path.join(__DIR_PATH, "response.json")) as response_file:
         yield json.load(response_file)
 
 
 @pytest.fixture
 def expected_json():
-    with open("tests/expected.json") as response_file:
+    with open(os.path.join(__DIR_PATH, "expected.json")) as response_file:
         yield json.load(response_file)
 
 
