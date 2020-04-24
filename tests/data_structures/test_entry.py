@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from data_structures.entry import Entry
 
@@ -30,3 +31,22 @@ def test_entry_inits_last_used_field():
     assert entry.last_used.hour == 17
     assert entry.last_used.minute == 2
     assert entry.last_used.second == 9
+
+
+def test_entry_inits_from_json_example():
+    # GIVEN some data from th example json
+    with open("tests/response.json") as response_file:
+        all_data = json.load(response_file)
+    some_entries_data = all_data["Berlin"]["BER-1"]["networks"]["192.168.0.0/24"]
+
+    # WHEN creating entry instances based on these entries
+    entries = [
+        Entry(entry_data["address"], entry_data["available"], entry_data["last_used"])
+        for entry_data in some_entries_data
+    ]
+
+    # THEN all entries are valid
+    for entry in entries:
+        assert isinstance(entry.address, str)
+        assert isinstance(entry.available, bool)
+        assert isinstance(entry.last_used, datetime)
