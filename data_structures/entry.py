@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class Entry:
     def __init__(self, address, available, last_used):
         """
@@ -8,3 +11,5 @@ class Entry:
         self.last_used -> datetime
         """
         self.address = address
+        self.available = available
+        self.last_used = datetime.strptime(last_used, "%d/%m/%y %H:%M:%S")
