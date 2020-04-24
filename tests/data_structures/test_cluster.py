@@ -83,7 +83,28 @@ __VALID_CLUSTER_NAME = {
     "BER-1": True,
     "BER-4000": False,
     "BER-203": True,
-    "TEST-1": False
+    "TEST-1": False,
+    " BER-1": False,
+    " BE-1": False,
+    "BER-1 ": False,
+    "BE-1": False,
+    "BER-": False,
+    "BER- ": False,
+    "": False,
+    " ": False,
+    "Ber-1": False,
+    "BEr-1": False,
+    "ber-1": False,
+    "TST-10": True,
+    "TST-0": True,
+    "B3R-1": False,
+    "BER1": False,
+    "BER11": False,
+    "BER 1": False,
+    "BER/1": False,
+    "BER-001": True,
+    "TST001": False,
+    "TST--1": False
 }
 
 
