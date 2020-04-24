@@ -1,5 +1,5 @@
 import pytest
-from ipaddress import IPv4Network
+from ipaddress import IPv4Network, IPv4Address
 from data_structures.network_collection import NetworkCollection
 from data_structures.entry import Entry
 
@@ -85,7 +85,7 @@ def test_is_address_in_network_returns_proper_value(network, addr):
     network_collection = NetworkCollection(network, [])
 
     # WHEN calling is_address_in_network on the input address
-    valid = network_collection.is_address_in_network(addr)
+    valid = network_collection.is_address_in_network(IPv4Address(addr))
 
     # THEN it returns proper value
     expected = __VALID_IP_NETWORK_PAIR[(network, addr)]
