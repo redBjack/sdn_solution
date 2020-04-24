@@ -64,7 +64,6 @@ def test_network_collection_inits_from_json_example(response_json_example):
     ])
 
 
-# TODO: fix failing cases
 __VALID_IP_NETWORK_PAIR = {
     ("192.168.0.0/24", "192.168.0.1"): True,
     ("192.168.0.0/24", "192.168.1.1"): False,
