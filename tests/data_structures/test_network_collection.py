@@ -33,3 +33,27 @@ def test_network_collection_init_entries():
     assert isinstance(network_collection.entries, list)
     assert len(network_collection.entries) == 2
     assert all([isinstance(entry, Entry) for entry in network_collection.entries])
+
+
+def test_network_collection_inits_from_json_example(response_json_example):
+    # GIVEN some data from the example json
+    some_networks_data = response_json_example["Berlin"]["BER-1"]["networks"]
+
+    # WHEN creating network collection instances based on these entries
+    network_collections = [
+        NetworkCollection(network, entries)
+        for network, entries in some_networks_data.items()
+    ]
+
+    # THEN all netowrk collections are valid
+    assert len(network_collections) == 2
+    assert all([
+        isinstance(network_collection.ipv4_network, IPv4Network)
+        for network_collection in network_collections
+        ])
+    assert all([
+        isinstance(network_collection.entries, list)
+        and
+        all([isinstance(entry, Entry) for entry in network_collection.entries])
+        for network_collection in network_collections
+    ])
