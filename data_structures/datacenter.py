@@ -1,3 +1,6 @@
+from data_structures.cluster import Cluster
+
+
 class Datacenter:
     def __init__(self, name, cluster_dict):
         """
@@ -7,6 +10,10 @@ class Datacenter:
         self.clusters -> list(Cluster)
         """
         self.name = name
+        self.clusters = [
+            Cluster(name, cluster_data["networks"], cluster_data["security_level"])
+            for name, cluster_data in cluster_dict.items()
+        ]
 
     def remove_invalid_clusters(self):
         """
