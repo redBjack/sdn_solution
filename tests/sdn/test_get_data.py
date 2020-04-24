@@ -122,14 +122,12 @@ def test_get_data_stops_retrying_if_succeeds_and_returns_dict(bad_response_mock)
     assert bad_response_mock.__enter__.call_count == 3
 
 
-def test_get_data_gives_expected_result_for_test_json():
+def test_get_data_gives_expected_result_for_test_json(response_json_example):
     # WHEN calling get_data on the test url
     response = get_data(__TEST_URL)
 
     # THEN the response is exactly as expected (saved in the file)
-    with open("tests/response.json") as response_file:
-        expected_response = json.load(response_file)
-    assert expected_response == response  # comparing dicts
+    assert response_json_example == response  # comparing dicts
 
 
 def test_get_data_sleeps_desired_amount_between_retries(sleep_mock):

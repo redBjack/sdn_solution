@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 from data_structures.entry import Entry
 
@@ -33,11 +32,9 @@ def test_entry_inits_last_used_field():
     assert entry.last_used.second == 9
 
 
-def test_entry_inits_from_json_example():
+def test_entry_inits_from_json_example(response_json_example):
     # GIVEN some data from th example json
-    with open("tests/response.json") as response_file:
-        all_data = json.load(response_file)
-    some_entries_data = all_data["Berlin"]["BER-1"]["networks"]["192.168.0.0/24"]
+    some_entries_data = response_json_example["Berlin"]["BER-1"]["networks"]["192.168.0.0/24"]
 
     # WHEN creating entry instances based on these entries
     entries = [
