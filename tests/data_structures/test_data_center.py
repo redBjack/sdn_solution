@@ -1,18 +1,11 @@
+import pytest
 from data_structures.datacenter import Datacenter
 from data_structures.cluster import Cluster
 
 
-def test_datacenter_inits_name():
-    # WHEN a Datacenter is created
-    datacenter = Datacenter("Berlin", {})
-
-    # THEN name is initialized
-    assert datacenter.name == "Berlin"
-
-
-def test_datacenter_inits_clusters():
-    # WHEN a Datacenter is created
-    datacenter = Datacenter(
+@pytest.fixture
+def two_cluster_data_center():
+    yield Datacenter(
         "Berlin",
         {
             "BER-1": {
@@ -39,7 +32,7 @@ def test_datacenter_inits_clusters():
                     ]
                 }
             },
-            "BER-203": {
+            "BER-2030": {
                 "security_level": 3,
                 "networks": {
                     "192.168.10.0/24": [
@@ -54,10 +47,22 @@ def test_datacenter_inits_clusters():
         }
     )
 
+
+def test_datacenter_inits_name():
+    # WHEN a Datacenter is created
+    datacenter = Datacenter("Berlin", {})
+
+    # THEN name is initialized
+    assert datacenter.name == "Berlin"
+
+
+def test_datacenter_inits_clusters(two_cluster_data_center):
+    # WHEN a Datacenter is created (in fixture two_cluster_data_center
+
     # THEN clusters field is properly initialized
-    assert isinstance(datacenter.clusters, list)
-    assert len(datacenter.clusters) == 2
-    assert all([isinstance(cluster, Cluster) for cluster in datacenter.clusters])
+    assert isinstance(two_cluster_data_center.clusters, list)
+    assert len(two_cluster_data_center.clusters) == 2
+    assert all([isinstance(cluster, Cluster) for cluster in two_cluster_data_center.clusters])
 
 
 def test_datacenter_inits_from_json_example(response_json_example):
