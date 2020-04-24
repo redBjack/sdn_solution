@@ -1,4 +1,4 @@
-from ipaddress import ip_network, IPv4Interface
+from ipaddress import ip_network, ip_address, IPv4Interface
 from data_structures.entry import Entry
 
 
@@ -20,8 +20,10 @@ class NetworkCollection:
         """
         Removes invalid objects from the entries list.
         """
-
-        pass
+        self.entries = [
+            entry for entry in self.entries
+            if entry.has_valid_address() and self.is_address_in_network(ip_address(entry.address))
+        ]
 
     def sort_records(self):
         """

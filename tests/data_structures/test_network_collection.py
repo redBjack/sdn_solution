@@ -94,3 +94,14 @@ def test_is_address_in_network_returns_proper_value(network, addr):
     expected = __VALID_IP_NETWORK_PAIR[(network, addr)]
     assert valid is expected,\
         f"Address {addr} should {'' if expected else 'not '}be part of network {network}."
+
+
+def test_remove_invalid_records_removes_entry(two_entries_collection):
+    # GIVEN network collection with two entries (one valid, one not valid)
+    assert len(two_entries_collection.entries) == 2
+
+    # WHEN calling remove_invalid_records on that collection
+    two_entries_collection.remove_invalid_records()
+
+    # THEN one entry has been removed
+    assert len(two_entries_collection.entries) == 1
