@@ -21,3 +21,8 @@ def json_example_data_centers(response_json_example):
         name: Datacenter(name, cluster_data)
         for name, cluster_data in response_json_example.items()
     }
+
+
+@pytest.fixture
+def test_url():
+    yield "http://www.mocky.io/v2/5e539b332e00007c002dacbe"
