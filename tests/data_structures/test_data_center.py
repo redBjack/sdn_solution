@@ -48,6 +48,17 @@ def two_cluster_data_center():
     )
 
 
+@pytest.fixture
+def json_example_data_centers(response_json_example):
+    """
+    Gives a dict with the data centers from the json example indexed by name
+    """
+    yield {
+        name: Datacenter(name, cluster_data)
+        for name, cluster_data in response_json_example.items()
+    }
+
+
 def test_datacenter_inits_name():
     # WHEN a Datacenter is created
     datacenter = Datacenter("Berlin", {})
@@ -65,26 +76,25 @@ def test_datacenter_inits_clusters(two_cluster_data_center):
     assert all([isinstance(cluster, Cluster) for cluster in two_cluster_data_center.clusters])
 
 
-def test_datacenter_inits_from_json_example(response_json_example):
-    # WHEN creating network cluster instances based on example entries
-    data_centers = {
-        name: Datacenter(name, cluster_data)
-        for name, cluster_data in response_json_example.items()
-    }
+def test_datacenter_inits_from_json_example(json_example_data_centers):
+    # WHEN creating network cluster instances based on example entries (fixture)
 
     # THEN all datacenters are valid
-    assert len(data_centers) == 2
-    assert all([isinstance(data_center, Datacenter) for data_center in data_centers.values()])
+    assert len(json_example_data_centers) == 2
+    assert all([
+        isinstance(data_center, Datacenter) for data_center in json_example_data_centers.values()
+    ])
     assert all([
         isinstance(data_center.name, str)
         and
         isinstance(data_center.clusters, list)
         and
         all([isinstance(cluster, Cluster) for cluster in data_center.clusters])
-        for data_center in data_centers.values()
+        for data_center in json_example_data_centers.values()
     ])
     # and this random value is correct
-    assert data_centers["Berlin"].clusters[1].networks[1].entries[2].address == "192.168.11.522"
+    assert json_example_data_centers["Berlin"].clusters[1].\
+               networks[1].entries[2].address == "192.168.11.522"
 
 
 def test_remove_invalid_clusters_removes_an_invalid_cluster(two_cluster_data_center):
