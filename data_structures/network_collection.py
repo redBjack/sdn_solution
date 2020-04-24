@@ -28,10 +28,8 @@ class NetworkCollection:
     def sort_records(self):
         """
         Sorts the list of associated entries in ascending order.
-        DO NOT change this method, make the changes in entry.py :)
         """
-
-        self.entries = sorted(self.entries)
+        self.entries.sort()
 
     def is_address_in_network(self, address):
         """
