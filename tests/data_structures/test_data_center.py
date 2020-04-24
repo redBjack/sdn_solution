@@ -106,3 +106,18 @@ def test_remove_invalid_clusters_removes_an_invalid_cluster(two_cluster_data_cen
 
     # THEN the data center is only left with one cluster
     assert len(two_cluster_data_center.clusters) == 1
+
+
+def test_remove_invalid_clusters_with_json_example(json_example_data_centers):
+    # GIVEN the set of data centers from the json example (fixture)
+    # with 4 and 12cluster respectively
+    assert len(json_example_data_centers["Berlin"].clusters) == 4
+    assert len(json_example_data_centers["Paris"].clusters) == 2
+
+    # WHEN calling remove_invalid_clusters for each of them
+    for data_center in json_example_data_centers.values():
+        data_center.remove_invalid_clusters()
+
+    # THEN there will only be 2 and 1 cluster left respectively
+    assert len(json_example_data_centers["Berlin"].clusters) == 2
+    assert len(json_example_data_centers["Paris"].clusters) == 1
