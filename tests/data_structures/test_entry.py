@@ -98,3 +98,14 @@ def test_entry_with_bigger_ip_is_bigger():
     # WHEN comparing them
     # THEN the one with 192.168.2.1 is bigger
     assert entry2 > entry1
+
+
+def test_entry_with_smaller_ip_is_smaller_or_equal():
+    # GIVEN and entry with ip 192.167.1.1
+    entry1 = Entry("192.167.1.1", True, "30/01/20 17:02:09")
+    # and one with 192.168.1.1
+    entry2 = Entry("192.168.1.1", True, "30/01/20 17:02:09")
+
+    # WHEN comparing them
+    # THEN the one with 192.167.1.11 is smaller or equal
+    assert entry1 <= entry2

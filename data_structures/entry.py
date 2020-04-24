@@ -35,3 +35,9 @@ class Entry:
         if not (self.has_valid_address() and other.has_valid_address()):
             raise ValueError("Cannot compare if address is not valid")
         return self.ipv4_address < other.ipv4_address
+
+    def __le__(self, other):
+        """
+        Compares with other entry based on ip address
+        """
+        return self < other or self.ipv4_address == other.ipv4_address
