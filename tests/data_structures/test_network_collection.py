@@ -127,3 +127,25 @@ def test_remove_invalid_records_with_json_example(json_example_data_centers):
     # THEN only valid entries remain (4 and 2 respectively)
     assert len(networks[0].entries) == 4
     assert len(networks[1].entries) == 2
+
+
+def test_sort_records_with_json_example(json_example_data_centers):
+    # GIVEN a set of data centers from the json example
+    # and reading the network with 4 valid entries
+    network = json_example_data_centers["Berlin"].clusters[0].networks[0]
+    network.remove_invalid_records()
+    assert len(network.entries) == 4
+    # and is not ordered
+    assert network.entries[0].address == "192.168.0.1"
+    assert network.entries[1].address == "192.168.0.4"
+    assert network.entries[2].address == "192.168.0.2"
+    assert network.entries[3].address == "192.168.0.3"
+
+    # WHEN sorting them
+    network.sort_records()
+
+    # THEN the entries are ordered
+    assert network.entries[0].address == "192.168.0.1"
+    assert network.entries[1].address == "192.168.0.2"
+    assert network.entries[2].address == "192.168.0.3"
+    assert network.entries[3].address == "192.168.0.4"
