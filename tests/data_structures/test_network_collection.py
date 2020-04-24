@@ -105,3 +105,21 @@ def test_remove_invalid_records_removes_entry(two_entries_collection):
 
     # THEN one entry has been removed
     assert len(two_entries_collection.entries) == 1
+
+
+def test_remove_invalid_records_with_json_example(json_example_data_centers):
+    # GIVEN a set of data centers from the json example
+    # with 2 networks in Berlin first cluster
+    networks = json_example_data_centers["Berlin"].clusters[0].networks
+    assert len(networks) == 2
+    # with 10 and 5 entries respectively
+    assert len(networks[0].entries) == 10
+    assert len(networks[1].entries) == 5
+
+    # WHEN calling remove_invalid_records
+    for network in networks:
+        network.remove_invalid_records()
+
+    # THEN only valid entries remain (4 and 2 respectively)
+    assert len(networks[0].entries) == 4
+    assert len(networks[1].entries) == 2
