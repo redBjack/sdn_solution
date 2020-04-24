@@ -30,3 +30,14 @@ class NetworkCollection:
         """
 
         self.entries = sorted(self.entries)
+
+    def is_address_in_network(self, address):
+        """
+        :param address: str representing an ip v4 address
+        :return bool - True if it is an address of the network, False if not
+        """
+        # First get the network ip of the given address using the network mask of the known network
+        network_ip = ip_network(f"{address}/{self.ipv4_network.netmask}", strict=False)
+
+        # If the resulted address is the same then the given address is in the network
+        return network_ip == self.ipv4_network
