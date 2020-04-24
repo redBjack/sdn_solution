@@ -76,3 +76,12 @@ def test_cluster_inits_from_json_example(response_json_example):
         isinstance(cluster.security_level, int)
         for cluster in clusters
     ])
+
+
+def test_has_valid_name_returns_proper_value():
+    # GIVEN a cluster instance
+    cluster = Cluster("BER-1", {}, 1)
+
+    # WHEN calling has_valid_name
+    # THEN it returns the proper value
+    assert cluster.has_valid_name() is True

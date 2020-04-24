@@ -1,3 +1,4 @@
+import re
 from data_structures.network_collection import NetworkCollection
 
 
@@ -16,3 +17,6 @@ class Cluster:
             for network_addr, entries in network_dict.items()
         ]
         self.security_level = security_level
+
+    def has_valid_name(self):
+        return bool(re.match(r'^[A-Z]{3}-\d{1,3}$', self.name))
