@@ -53,3 +53,26 @@ def test_inits_cluster_security_level():
     assert cluster.security_level == 1
 
 
+def test_cluster_inits_from_json_example(response_json_example):
+    # GIVEN some data from the example json
+    some_cluster_data = response_json_example["Berlin"]
+
+    # WHEN creating network cluster instances based on these entries
+    clusters = [
+        Cluster(name, cluster_data["networks"], cluster_data["security_level"])
+        for name, cluster_data in some_cluster_data.items()
+    ]
+
+    # THEN all clusters are valid
+    assert len(clusters) == 4
+    assert all([isinstance(cluster, Cluster) for cluster in clusters])
+    assert all([
+        isinstance(cluster.name, str)
+        and
+        isinstance(cluster.networks, list)
+        and
+        all([isinstance(network, NetworkCollection) for network in cluster.networks])
+        and
+        isinstance(cluster.security_level, int)
+        for cluster in clusters
+    ])
