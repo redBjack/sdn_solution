@@ -19,5 +19,4 @@ class Datacenter:
         """
         Removes invalid objects from the clusters list.
         """
-
-        pass
+        self.clusters = [cluster for cluster in self.clusters if cluster.has_valid_name()]

@@ -85,3 +85,14 @@ def test_datacenter_inits_from_json_example(response_json_example):
     ])
     # and this random value is correct
     assert data_centers["Berlin"].clusters[1].networks[1].entries[2].address == "192.168.11.522"
+
+
+def test_remove_invalid_clusters_removes_an_invalid_cluster(two_cluster_data_center):
+    # GIVEN a data center with two cluster (one with a valid name, one invalid) (from fixture)
+    assert len(two_cluster_data_center.clusters) == 2
+
+    # WHEN calling remove_invalid_clusters
+    two_cluster_data_center.remove_invalid_clusters()
+
+    # THEN the data center is only left with one cluster
+    assert len(two_cluster_data_center.clusters) == 1
