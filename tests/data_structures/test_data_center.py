@@ -48,17 +48,6 @@ def two_cluster_data_center():
     )
 
 
-@pytest.fixture
-def json_example_data_centers(response_json_example):
-    """
-    Gives a dict with the data centers from the json example indexed by name
-    """
-    yield {
-        name: Datacenter(name, cluster_data)
-        for name, cluster_data in response_json_example.items()
-    }
-
-
 def test_datacenter_inits_name():
     # WHEN a Datacenter is created
     datacenter = Datacenter("Berlin", {})
