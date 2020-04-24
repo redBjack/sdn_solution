@@ -1,3 +1,4 @@
+import pytest
 from data_structures.cluster import Cluster
 from data_structures.network_collection import NetworkCollection
 
@@ -78,10 +79,17 @@ def test_cluster_inits_from_json_example(response_json_example):
     ])
 
 
-def test_has_valid_name_returns_proper_value():
-    # GIVEN a cluster instance
-    cluster = Cluster("BER-1", {}, 1)
+__VALID_CLUSTER_NAME = {
+    "BER-1": True,
+    "BER-4000": False
+}
+
+
+@pytest.mark.parametrize("name", __VALID_CLUSTER_NAME)
+def test_has_valid_name_returns_proper_value(name):
+    # GIVEN a cluster instance with test name
+    cluster = Cluster(name, {}, 1)
 
     # WHEN calling has_valid_name
     # THEN it returns the proper value
-    assert cluster.has_valid_name() is True
+    assert cluster.has_valid_name() is __VALID_CLUSTER_NAME[name]
