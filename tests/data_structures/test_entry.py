@@ -120,3 +120,35 @@ def test_entry_with_same_ip_is_smaller_or_equal():
     # WHEN comparing them
     # THEN <= works both ways
     assert entry1 <= entry2 <= entry1
+
+
+def test_comparision_operators_work_between_equal_entries():
+    # GIVEN and entries with same ip
+    entry1 = Entry("192.168.1.1", True, "30/01/20 17:02:09")
+    entry2 = Entry("192.168.1.1", False, "28/02/20 17:04:19")
+
+    # WHEN comparing them
+    # THEN all comparison operators work
+    assert entry1 <= entry2 <= entry1
+    assert entry1 >= entry2 >= entry1
+    assert not entry1 < entry2
+    assert not entry2 < entry1
+    assert not entry1 > entry2
+    assert not entry2 > entry1
+
+
+def test_comparision_operators_work_between_different_entries():
+    # GIVEN and entries with different IPs
+    entry1 = Entry("191.168.1.1", True, "30/01/20 17:02:09")
+    entry2 = Entry("192.168.1.1", True, "30/01/19 17:02:09")
+
+    # WHEN comparing them
+    # THEN all comparison operators work
+    assert entry1 <= entry2
+    assert not entry2 <= entry1
+    assert not entry1 >= entry2
+    assert entry2 >= entry1
+    assert entry1 < entry2
+    assert not entry2 < entry1
+    assert not entry1 > entry2
+    assert entry2 > entry1
