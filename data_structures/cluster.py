@@ -19,4 +19,9 @@ class Cluster:
         self.security_level = security_level
 
     def has_valid_name(self):
+        """
+        Validates name of the cluster
+
+        :return bool: True if valid, False if not
+        """
         return bool(re.match(r'^[A-Z]{3}-\d{1,3}$', self.name))
