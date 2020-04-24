@@ -1,4 +1,5 @@
 from datetime import datetime
+from ipaddress import IPv4Address, AddressValueError
 
 
 class Entry:
@@ -13,3 +14,13 @@ class Entry:
         self.address = address
         self.available = available
         self.last_used = datetime.strptime(last_used, "%d/%m/%y %H:%M:%S")
+
+    def has_valid_address(self):
+        """
+        Validates address is IPv4 Address
+        """
+        try:
+            IPv4Address(self.address)
+            return True
+        except AddressValueError:
+            return False

@@ -47,3 +47,12 @@ def test_entry_inits_from_json_example(response_json_example):
         assert isinstance(entry.address, str)
         assert isinstance(entry.available, bool)
         assert isinstance(entry.last_used, datetime)
+
+
+def test_has_valid_address_returns_proper_value():
+    # GIVEN an Entry instance
+    entry = Entry("192.168.1.1", True, "30/01/20 17:00:00")
+
+    # WHEN calling has_valid_address
+    # THEN it returns the proper value
+    assert entry.has_valid_address() is True
