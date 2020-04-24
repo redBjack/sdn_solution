@@ -81,7 +81,9 @@ def test_cluster_inits_from_json_example(response_json_example):
 
 __VALID_CLUSTER_NAME = {
     "BER-1": True,
-    "BER-4000": False
+    "BER-4000": False,
+    "BER-203": True,
+    "TEST-1": False
 }
 
 
