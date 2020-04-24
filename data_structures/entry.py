@@ -26,3 +26,12 @@ class Entry:
             return True
         except AddressValueError:
             return False
+
+    def __lt__(self, other):
+        """
+        Compares with other entry based on ip address
+        """
+        # these checks also ensure that ipv4_address is present
+        if not (self.has_valid_address() and other.has_valid_address()):
+            raise ValueError("Cannot compare if address is not valid")
+        return self.ipv4_address < other.ipv4_address

@@ -76,3 +76,14 @@ def test_has_valid_address_returns_proper_value(address):
     expected = __VALID_IP_ADDRESS[address]
     assert entry.has_valid_address() is expected,\
         f"Address {address} should {'' if expected else 'not '}be valid."
+
+
+def test_entry_with_smaller_ip_is_smaller():
+    # GIVEN and entry with ip 192.168.1.1
+    entry1 = Entry("192.168.1.1", True, "30/01/20 17:02:09")
+    # and one with 192.168.1.2
+    entry2 = Entry("192.168.1.2", True, "30/01/20 17:02:09")
+
+    # WHEN comparing them
+    # THEN the one with 192.168.1.1 is smaller
+    assert entry1 < entry2
