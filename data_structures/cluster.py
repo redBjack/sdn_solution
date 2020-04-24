@@ -15,3 +15,4 @@ class Cluster:
             NetworkCollection(network_addr, entries)
             for network_addr, entries in network_dict.items()
         ]
+        self.security_level = security_level

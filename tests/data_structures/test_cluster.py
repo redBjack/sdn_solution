@@ -43,3 +43,13 @@ def test_cluster_inits_networks():
     assert len(cluster.networks) == 2
     assert all([isinstance(network, NetworkCollection) for network in cluster.networks])
     assert cluster.networks[0].entries[1].last_used.year == 2019
+
+
+def test_inits_cluster_security_level():
+    # WHEN creating an instance of Cluster
+    cluster = Cluster("BER-1", {}, 1)
+
+    # THEN security_level is properly initialized
+    assert cluster.security_level == 1
+
+
