@@ -20,3 +20,17 @@ class Datacenter:
         Removes invalid objects from the clusters list.
         """
         self.clusters = [cluster for cluster in self.clusters if cluster.has_valid_name()]
+
+    def remove_invalid_records(self):
+        """
+        Remove all invalid records downstream
+        """
+        for cluster in self.clusters:
+            cluster.remove_invalid_records()
+
+    def sort_records(self):
+        """
+        Sort records downstream
+        """
+        for cluster in self.clusters:
+            cluster.sort_records()

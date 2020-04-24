@@ -13,6 +13,12 @@ def response_json_example():
 
 
 @pytest.fixture
+def expected_json():
+    with open("tests/expected.json") as response_file:
+        yield json.load(response_file)
+
+
+@pytest.fixture
 def json_example_data_centers(response_json_example):
     """
     Gives a dict with the data centers from the json example indexed by name

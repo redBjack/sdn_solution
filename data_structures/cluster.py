@@ -25,3 +25,17 @@ class Cluster:
         :return bool: True if valid, False if not
         """
         return bool(re.match(r'^[A-Z]{3}-\d{1,3}$', self.name))
+
+    def remove_invalid_records(self):
+        """
+        Remove all invalid records downstream
+        """
+        for network in self.networks:
+            network.remove_invalid_records()
+
+    def sort_records(self):
+        """
+        Sort records downstream
+        """
+        for network in self.networks:
+            network.sort_records()
