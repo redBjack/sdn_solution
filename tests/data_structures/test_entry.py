@@ -1,3 +1,4 @@
+import pytest
 from datetime import datetime
 from data_structures.entry import Entry
 
@@ -49,10 +50,19 @@ def test_entry_inits_from_json_example(response_json_example):
         assert isinstance(entry.last_used, datetime)
 
 
-def test_has_valid_address_returns_proper_value():
-    # GIVEN an Entry instance
-    entry = Entry("192.168.1.1", True, "30/01/20 17:00:00")
+__VALID_IP_ADDRESS = {
+    "1.1.1.1": True,
+    "10.1.256.1": False
+}
+
+
+@pytest.mark.parametrize("address", __VALID_IP_ADDRESS)
+def test_has_valid_address_returns_proper_value(address):
+    # GIVEN an Entry instance with the test address
+    entry = Entry(address, True, "30/01/20 17:00:00")
 
     # WHEN calling has_valid_address
     # THEN it returns the proper value
-    assert entry.has_valid_address() is True
+    expected = __VALID_IP_ADDRESS[address]
+    assert entry.has_valid_address() is expected,\
+        f"Address {address} should {'' if expected else 'not '}be valid."
